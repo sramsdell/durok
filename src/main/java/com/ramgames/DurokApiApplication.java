@@ -1,4 +1,4 @@
-package com.durok;
+package com.ramgames;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
