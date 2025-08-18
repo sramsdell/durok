@@ -2,6 +2,7 @@ package com.ramgames;
 
 import com.ramgames.model.Game;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,11 @@ public class HashMapPersistence implements GamePersistence {
     @Override
     public Optional<Game> findById(String id) {
         return Optional.ofNullable(games.get(id));
+    }
+
+    @Override
+    public Optional<List<String>> getAllIds() {
+        return Optional.of(games.keySet().stream().toList());
     }
 
     @Override

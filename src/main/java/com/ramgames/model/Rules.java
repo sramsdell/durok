@@ -11,6 +11,8 @@ public class Rules {
 
     boolean SECOND_TRUMP = false;
 
+    boolean FAMILY_FIRST_ATTACK = false;
+
     public int getMaxBattles() {
         return MAX_BATTLES;
     }
@@ -21,5 +23,9 @@ public class Rules {
 
     public boolean isSecondTrump() {
         return SECOND_TRUMP;
+    }
+
+    public boolean isFamilyFirstAttack() {
+        return FAMILY_FIRST_ATTACK;
     }
 }

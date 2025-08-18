@@ -2,6 +2,7 @@ package com.ramgames.model;
 
 import com.ramgames.model.decks.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +12,34 @@ import java.util.UUID;
 @Schema(description = "A Game")
 public class Game {
 
+    @Getter
     String id;
     Deck deck;
+    @Getter
     List<Player> players = new ArrayList<>();
-    List<Player> activePlayers = new ArrayList<>();;
-    List<Player> otherAttackers = new ArrayList<>();;
+    @Getter
+    List<Player> activePlayers = new ArrayList<>();
+    @Getter
+    List<Player> otherAttackers = new ArrayList<>();
+    @Getter
     Player defender;
+    @Getter
     Player attacker;
 
+    @Getter
     Player host;
     Stack<Card> trumpCards = new Stack<>();
+    @Getter
     Suit trumpSuit;
 
+    Rules rules;
+
+    // TODO consider enum for state.
+    @Getter
+    boolean started = false;
+
     public Game(String hostName, Rules rules) {
+        this.rules = rules;
         id = UUID.randomUUID().toString();
         deck = DeckFactory.create(rules.getDeckType());
         deck.shuffleDeck();
@@ -32,17 +48,26 @@ public class Game {
             trumpCards.add(deck.getNextCard());
         }
         trumpSuit = trumpCards.peek().getSuit();
-        host = new Player(UUID.randomUUID().toString(), hostName);
-    }
-
-    public String getId() {
-        return id;
+        host = new Player(hostName);
+        addPlayer(host);
     }
 
     public void addPlayer(Player player) {
         // TODO validate via deck size
         players.add(player);
         activePlayers.add(player);
+    }
+
+    public boolean isGameStarted() {
+        return started;
+    }
+
+    public void startGame() {
+        this.started = true;
+        deal();
+        attacker = determineFirstPlayer();
+        defender = nextPlayer(attacker.getName());
+        determineOtherAttackers(defender);
     }
 
     private void deal() {
@@ -66,14 +91,24 @@ public class Game {
         return firstPlayer;
     }
 
-    public int firstPlayerPosition(Player firstPlayer) {
-        int pos = 0;
-        for (int i = 0; i< players.size(); i++) {
-            if (firstPlayer.equals(players.get(i))) {
-                pos = i;
+    // TODO use Ids not names
+    // use determineOtherAttackers strategy?
+    public Player nextPlayer(String currentPlayerName) {
+        int index = 0;
+        for (int i = 0; i < activePlayers.size(); i++) {
+            if (activePlayers.get(i).getName().equals(currentPlayerName)) {
+                index = (i + 1) % activePlayers.size();
                 break;
             }
         }
-        return pos;
+        return activePlayers.get(index);
+    }
+
+    public void determineOtherAttackers(Player defender) {
+        if (!rules.isFamilyFirstAttack()) {
+            // Todo, I don't like it, empty by other means.
+           otherAttackers = new ArrayList<>();
+           otherAttackers.add(nextPlayer(defender.getName()));
+        }
     }
 }
