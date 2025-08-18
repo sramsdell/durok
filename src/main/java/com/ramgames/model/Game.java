@@ -1,23 +1,30 @@
 package com.ramgames.model;
 
 import com.ramgames.model.decks.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
+import java.util.UUID;
 
+@Schema(description = "A Game")
 public class Game {
 
-    private int instanceId;
-
+    String id;
     Deck deck;
-    List<Player> players;
-    List<Player> activePlayers;
+    List<Player> players = new ArrayList<>();
+    List<Player> activePlayers = new ArrayList<>();;
+    List<Player> otherAttackers = new ArrayList<>();;
+    Player defender;
+    Player attacker;
 
-    Stack<Card> trumpCards;
+    Player host;
+    Stack<Card> trumpCards = new Stack<>();
     Suit trumpSuit;
 
-    public Game(Rules rules) {
+    public Game(String hostName, Rules rules) {
+        id = UUID.randomUUID().toString();
         deck = DeckFactory.create(rules.getDeckType());
         deck.shuffleDeck();
         trumpCards.add(deck.getNextCard());
@@ -25,6 +32,11 @@ public class Game {
             trumpCards.add(deck.getNextCard());
         }
         trumpSuit = trumpCards.peek().getSuit();
+        host = new Player(UUID.randomUUID().toString(), hostName);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void addPlayer(Player player) {

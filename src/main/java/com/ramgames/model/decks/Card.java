@@ -1,7 +1,9 @@
 package com.ramgames.model.decks;
 
-import java.util.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Objects;
+@Schema(description = "A Card")
 public class Card implements Comparable<Card> {
     final private Suit suit;
     final private CardValue value;
