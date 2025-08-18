@@ -33,7 +33,7 @@ class DecksTest extends ParentTest {
     }
 
     @Test
-    void doubleDeckUnique() {
+    void doubleDeckDoubled() {
         Set<Card> doubleSet = new HashSet<>(doubleDeck.getDeck());
         assert (doubleSet.size() == 52);
     }
@@ -46,12 +46,6 @@ class DecksTest extends ParentTest {
 
     @Test
     void testCardComparison() {
-        Card cardTwoClub = new Card(CardValue.TWO, Suit.CLUB);
-        Card cardTwoHeart = new Card(CardValue.TWO, Suit.HEART);
-        Card cardKingDiamond = new Card(CardValue.KING, Suit.DIAMOND);
-        Card cardKingDiamond2 = new Card(CardValue.KING, Suit.DIAMOND);
-        Card cardAceClub = new Card(CardValue.ACE, Suit.CLUB);
-
         assert (cardAceClub.compareTo(cardKingDiamond) > 0);
         assert (cardTwoClub.compareTo(cardKingDiamond) < 0);
         assert (cardTwoClub.compareTo(cardTwoHeart) == 0);

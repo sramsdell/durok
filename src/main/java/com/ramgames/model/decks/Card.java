@@ -19,6 +19,9 @@ public class Card implements Comparable<Card> {
         return value;
     }
 
+    public static Card getHighestCard() {
+        return new Card(CardValue.getHighest(),Suit.SPADE);
+    }
     @Override
     public String toString() {
         return "Card{" +
