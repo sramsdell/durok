@@ -4,11 +4,14 @@ import com.ramgames.model.decks.DeckType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class Rules {
-    // TODO read from config file or environment to set
-    final int MAX_BATTLES = 6;
-    final DeckType DECK_TYPE = DeckType.STD;
 
-    final boolean SECOND_TRUMP = false;
+    // defaults for basic game.
+    int MAX_BATTLES = 6;
+    DeckType DECK_TYPE = DeckType.STD;
+
+    boolean SECOND_TRUMP = false;
+
+    boolean FAMILY_FIRST_ATTACK = false;
 
     public int getMaxBattles() {
         return MAX_BATTLES;
@@ -20,5 +23,9 @@ public class Rules {
 
     public boolean isSecondTrump() {
         return SECOND_TRUMP;
+    }
+
+    public boolean isFamilyFirstAttack() {
+        return FAMILY_FIRST_ATTACK;
     }
 }

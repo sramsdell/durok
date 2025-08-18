@@ -1,9 +1,11 @@
 package com.ramgames.model;
 
 import com.ramgames.model.decks.Card;
+import com.ramgames.model.decks.CardValue;
 import com.ramgames.model.decks.Suit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +39,9 @@ public class Hand {
         List<Card> handCopy = new ArrayList<>(hand);
         handCopy.removeIf((card) -> card.getSuit() != suit);
         Collections.sort(handCopy);
+        if (handCopy.isEmpty()) {
+            return new Card(CardValue.getHighest(),Suit.SPADE);
+        }
         return handCopy.get(0);
     }
     public void flushHand() {
