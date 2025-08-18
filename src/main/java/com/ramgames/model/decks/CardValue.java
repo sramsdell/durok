@@ -25,4 +25,8 @@ public enum CardValue {
     public int getValue() {
         return value;
     }
+
+    public static CardValue getHighest() {
+        return POLISH_QUEEN;
+    }
 }

@@ -19,6 +19,10 @@ public abstract class Deck {
         deck.push(card);
     }
 
+    public Card getNextCard() {
+        return deck.pop();
+    }
+
     public int getSize() {
         return deck.size();
     }
