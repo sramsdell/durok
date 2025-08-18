@@ -3,6 +3,7 @@ package com.ramgames.model;
 import com.ramgames.model.decks.Card;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -16,6 +17,9 @@ public class Player {
     String name;
 
     Hand hand;
+    @Setter
+    @Getter
+    boolean isDonePlayingCardsInCurrentRound = false;
 
     public Player(String name) {
         this.id = UUID.randomUUID().toString();

@@ -23,7 +23,7 @@ public class Hand {
         hand.addAll(cards);
     }
 
-    public int handSize() {
+    public int getHandSize() {
         return hand.size();
     }
 
@@ -48,8 +48,12 @@ public class Hand {
         hand = new ArrayList<>();
     }
 
+    public boolean hasCard(Card card) {
+        return hand.contains(card);
+    }
+
     public Card playCard(Card card) {
-        if (hand.contains(card)) {
+        if (hasCard(card)) {
             removeCard(card);
             return card;
         }

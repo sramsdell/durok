@@ -15,13 +15,32 @@ public class Round {
       this.defender = defender;
   }
 
-  private boolean addBattle(Card card) {
+  public boolean addBattle(Card card) {
       Battle battle = new Battle(card);
       return battles.add(battle);
   }
 
+  public boolean allBattlesWon() {
+      for (Battle battle : battles) {
+          if (!battle.isWon()) {
+              return battle.isWon();
+          }
+      }
+      return true;
+  }
+
   public List<Battle> getBattles() {
       return battles;
+  }
+
+  public boolean canPlayAttackCard(Card card) {
+      for (Battle battle : battles) {
+          if (battle.getAttackCard().getSuit().equals(card.getSuit()) ||
+              battle.getDefendCard().getSuit().equals(card.getSuit())) {
+              return true;
+          }
+      }
+      return false;
   }
 
   public boolean canAddBattle(int defenderHandSize, Rules rules) {
@@ -29,6 +48,7 @@ public class Round {
       return battles.size() < rules.getMaxBattles() && battles.size() < defenderHandSize;
   }
 
+  // TODO refactor do I need this still?
   public boolean addAttack(Card card, int defenderHandSize, Rules rules) {
       return canAddBattle(defenderHandSize, rules) && addBattle(card);
   }

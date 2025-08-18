@@ -3,6 +3,7 @@ package com.ramgames.model;
 import com.ramgames.model.decks.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.UUID;
 public class Game {
 
     @Getter
+    Player theDurok;
+    @Getter
     String id;
     Deck deck;
     @Getter
@@ -21,22 +24,30 @@ public class Game {
     List<Player> activePlayers = new ArrayList<>();
     @Getter
     List<Player> otherAttackers = new ArrayList<>();
+    @Setter
     @Getter
     Player defender;
+    @Setter
     @Getter
     Player attacker;
-
     @Getter
     Player host;
     Stack<Card> trumpCards = new Stack<>();
     @Getter
     Suit trumpSuit;
-
+    @Getter
     Rules rules;
+
+    // not great that its getting set to null
+    @Getter
+    Round round = null;
 
     // TODO consider enum for state.
     @Getter
     boolean started = false;
+
+    @Getter
+    Boolean isDeckEmpty = false;
 
     public Game(String hostName, Rules rules) {
         this.rules = rules;
@@ -52,10 +63,34 @@ public class Game {
         addPlayer(host);
     }
 
+    public void setDurok(Player player) {
+        theDurok = player;
+    }
+
+    public boolean deckHasCards() {
+        return deck.getDeck().size() + trumpCards.size() > 0;
+    }
+
+    public Card getNextCardFromDeck() {
+        Card card;
+        if (deck.getSize() > 0) {
+            return deck.getNextCard();
+        }
+        if (trumpCards.size() > 0) {
+            return trumpCards.pop();
+        }
+        isDeckEmpty = true;
+        return null;
+    }
+
     public void addPlayer(Player player) {
         // TODO validate via deck size
         players.add(player);
         activePlayers.add(player);
+    }
+
+    public void resetRound() {
+        round = null;
     }
 
     public boolean isGameStarted() {
@@ -78,6 +113,14 @@ public class Game {
         }
     }
 
+    public void firstAttack(Card card) {
+        round = new Round(card, defender);
+    }
+
+    public boolean attack(Card card) {
+        return round.addAttack(card,defender.getHand().getHandSize(), rules);
+    }
+
     private Player determineFirstPlayer() {
         Card lowestCard = Card.getHighestCard();
         Player firstPlayer = players.get(0);
@@ -92,7 +135,6 @@ public class Game {
     }
 
     // TODO use Ids not names
-    // use determineOtherAttackers strategy?
     public Player nextPlayer(String currentPlayerName) {
         int index = 0;
         for (int i = 0; i < activePlayers.size(); i++) {
@@ -104,11 +146,24 @@ public class Game {
         return activePlayers.get(index);
     }
 
+    public Player getActivePlayerByName(String name) {
+        int index = 0;
+        for (Player activePlayer : activePlayers) {
+            if (activePlayer.getName().equals(name)) {
+                return activePlayers.get(index);
+            }
+        }
+        // TODO handle shouldn't get here
+        return null;
+    }
+
     public void determineOtherAttackers(Player defender) {
         if (!rules.isFamilyFirstAttack()) {
             // Todo, I don't like it, empty by other means.
            otherAttackers = new ArrayList<>();
-           otherAttackers.add(nextPlayer(defender.getName()));
+           if (activePlayers.size() > 1) {
+               otherAttackers.add(nextPlayer(defender.getName()));
+           }
         }
     }
 }
