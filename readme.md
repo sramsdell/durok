@@ -17,6 +17,11 @@ Build and run Container
 ./runDocker.sh
 ```
 
+Simple non-deterministic smoke test
+```
+./utils/testAPI.sh
+```
+
 Json Documentation: http://localhost:8080/v3/api-docs <br>
 Swagger Documentation: http://localhost:8080/swagger-ui/index.html
 

@@ -35,13 +35,43 @@ curl -X 'POST' \
   -d ''
 echo "Done Start Game"
 
-echo "Print Game"
-curl -X 'GET' \
+echo "attacker name"
+curl -s -X 'GET' \
   "${HOST}/game/${GAME_ID}" \
-  -H 'accept: */*' | jq
+  -H 'accept: */*' | jq .attacker.name
+
+echo "defender name"
+curl -s -X 'GET' \
+  "${HOST}/game/${GAME_ID}" \
+  -H 'accept: */*' | jq .defender.name
+
+ATTACKER=$(curl -s -X 'GET' \
+             "${HOST}/game/${GAME_ID}" \
+             -H 'accept: */*' | jq --raw-output .attacker.name)
+
+DEFENDER=$(curl -s -X 'GET' \
+             "${HOST}/game/${GAME_ID}" \
+             -H 'accept: */*' | jq --raw-output .defender.name)
 
 
+
+
+ATTACKER_CARD=$(curl -s -X 'GET' \
+  "${HOST}/game/${GAME_ID}" \
+  -H 'accept: */*' | jq .attacker.hand.hand[0])
+
+  curl -X 'POST' \
+    "${HOST}/game/${GAME_ID}/attack?name=${ATTACKER}" \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d "${ATTACKER_CARD}" |jq
+
+
+
+
+echo ""
+echo ""
 echo "print all games ids"
-curl -X 'GET' \
+curl -s -X 'GET' \
   "${HOST}/game" \
   -H 'accept: */*' | jq
